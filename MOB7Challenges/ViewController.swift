@@ -19,8 +19,8 @@ class ViewController: UIViewController {
 //        createRainbowView()
 //        createMirageView()
 //        createPatternView()
-//        setUpBezierLayer()
-        createCirclesWithShadowLayer()
+        setUpBezierLayer()
+//        createCirclesWithShadowLayer()
         
     }
     
@@ -147,13 +147,41 @@ class ViewController: UIViewController {
         return bezierPath
     }
     
+    func createBezierPath2() -> UIBezierPath {
+        // my problem was that i was using the .move, when you use .move, it cancels the current path being created and instead starts a new path, which you can't close
+        
+        let bezierPath = UIBezierPath()
+        let startingPoint = CGPoint(x: self.view.bounds.minX, y: self.view.bounds.midY)
+        bezierPath.move(to: startingPoint)
+        let controlPoint1 = CGPoint(x: self.view.bounds.midX / 2, y: startingPoint.y)
+        let controlPoint2 = CGPoint(x: self.view.bounds.midX / 2, y: self.view.bounds.height / 2 + 130)
+        let midPoint = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY + 130)
+        bezierPath.addCurve(to: midPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+        let endPoint = CGPoint(x: self.view.bounds.maxX, y: self.view.bounds.midY - 20)
+        let controlPoint3 = CGPoint(x: self.view.bounds.maxX - (self.view.bounds.midX / 2), y: startingPoint.y + 130)
+        let controlPoint4 = CGPoint(x: self.view.bounds.maxX - (self.view.bounds.midX / 2) - 10, y: startingPoint.y - 70)
+        bezierPath.addCurve(to: endPoint, controlPoint1: controlPoint3, controlPoint2: controlPoint4)
+        let bottomEndPoint = CGPoint(x: self.view.bounds.maxX , y: self.view.bounds.maxY)
+        bezierPath.addLine(to: bottomEndPoint)
+        let bottomBeginPoint = CGPoint(x: self.view.bounds.minX, y: self.view.bounds.maxY)
+        bezierPath.addLine(to: bottomBeginPoint)
+        bezierPath.close()
+        
+        return bezierPath
+    }
+    
     func setUpBezierLayer() {
         let bezierLayer = CAShapeLayer()
         let circleLayer = CAShapeLayer()
         bezierLayer.path = createBezierPath().cgPath
-        bezierLayer.fillColor = UIColor.blue.cgColor
-        bezierLayer.strokeColor = UIColor.black.cgColor
+        bezierLayer.fillColor = UIColor.orange.cgColor
         self.view.layer.addSublayer(bezierLayer)
+        let bezierLayer2 = CAShapeLayer()
+        bezierLayer2.path = createBezierPath2().cgPath
+        bezierLayer2.fillColor = UIColor.blue.cgColor
+        self.view.layer.addSublayer(bezierLayer2)
+        
+        
         let circleX = (self.view.bounds.width / 2) + self.view.bounds.width / 4
         let circleY = CGFloat(50)
         let rect = CGRect(x: circleX, y: circleY, width: 75, height: 75)

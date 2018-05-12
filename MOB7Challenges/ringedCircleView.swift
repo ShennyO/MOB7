@@ -25,8 +25,6 @@ class ringedCircle: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.layer.borderColor = UIColor.gray.withAlphaComponent(0.2).cgColor
-        self.layer.borderWidth = 2
         self.layer.cornerRadius = frame.height / 2
         self.layer.addSublayer(innerCircle)
         self.layer.borderWidth = self.bounds.width * 0.1
