@@ -66,7 +66,6 @@ class customNumberButton: UIView {
         view.layer.anchorPoint = CGPoint(x: 0.35, y: 0.5)
         view.center = CGPoint(x: self.middleCircle.bounds.minX, y: self.middleCircle.bounds.midY)
         view.layer.borderWidth = 12
-        
         return view
     }()
     
@@ -81,6 +80,7 @@ class customNumberButton: UIView {
         
         return view
     }()
+    
     
     
     override init(frame: CGRect) {
@@ -99,10 +99,31 @@ class customNumberButton: UIView {
         self.addSubview(numberText)
         self.leftCircle.addSubview(minusText)
         self.rightCircle.addSubview(plusText)
+        
+        let leftTap = UITapGestureRecognizer(target: self, action: #selector(self.leftCircleTapped))
+        leftTap.delegate = self as? UIGestureRecognizerDelegate
+        self.leftCircle.addGestureRecognizer(leftTap)
+        
+        let rightTap = UITapGestureRecognizer(target: self, action: #selector(self.rightCircleTapped))
+        rightTap.delegate = self as? UIGestureRecognizerDelegate
+        self.rightCircle.addGestureRecognizer(rightTap)
+        
+
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func leftCircleTapped() {
+        self.textValue -= 1
+        self.numberText.text = "\(textValue)"
+        
+    }
+    
+    @objc func rightCircleTapped() {
+        self.textValue += 1
+        self.numberText.text = "\(textValue)"
     }
     
 }
