@@ -202,7 +202,7 @@ class ViewController: UIViewController {
     }
     
     func createCustomNumberButton() {
-        let button = customNumberButton(frame: CGRect(x: 0, y: 0, width: 250, height: 250))
+        let button = customNumberButton(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
         button.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
         self.view.addSubview(button)
     }

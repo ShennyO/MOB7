@@ -37,6 +37,17 @@ class customNumberButton: UIView {
         return label
     }()
     
+    lazy var plusText: UILabel = {
+        let labelWidthHeight = self.rightCircle.bounds.width * 0.55
+        let labelFrame = CGRect(x: 0, y: 0, width: labelWidthHeight, height: labelWidthHeight)
+        let label = UILabel(frame: labelFrame)
+        label.font = UIFont(name: "HelveticaNeue-Bold", size: labelWidthHeight)
+        label.center = CGPoint(x: self.leftCircle.bounds.width / 2, y: self.rightCircle.bounds.height / 2 - (self.rightCircle.bounds.height * 0.05))
+        label.textAlignment = .center
+        label.text = "+"
+        return label
+    }()
+    
     lazy var middleCircle: UIView = {
         let rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         let view = UIView(frame: rect)
@@ -87,6 +98,7 @@ class customNumberButton: UIView {
         rightCircle.layer.zPosition = 2
         self.addSubview(numberText)
         self.leftCircle.addSubview(minusText)
+        self.rightCircle.addSubview(plusText)
     }
     
     required init?(coder aDecoder: NSCoder) {
