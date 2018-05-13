@@ -16,6 +16,7 @@
 		84C0357D209FBBCD00219736 /* MOB7ChallengesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C0357C209FBBCD00219736 /* MOB7ChallengesTests.swift */; };
 		84C03588209FBBCD00219736 /* MOB7ChallengesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C03587209FBBCD00219736 /* MOB7ChallengesUITests.swift */; };
 		84C0359820A0D23E00219736 /* UIColor + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C0359720A0D23E00219736 /* UIColor + Extensions.swift */; };
+		84E0B57320A6970B00966AAC /* CustomNumberButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0B57220A6970B00966AAC /* CustomNumberButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		84C03587209FBBCD00219736 /* MOB7ChallengesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MOB7ChallengesUITests.swift; sourceTree = "<group>"; };
 		84C03589209FBBCD00219736 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84C0359720A0D23E00219736 /* UIColor + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extensions.swift"; sourceTree = "<group>"; };
+		84E0B57220A6970B00966AAC /* CustomNumberButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNumberButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				84C03567209FBBCD00219736 /* AppDelegate.swift */,
 				84C03569209FBBCD00219736 /* ViewController.swift */,
 				844A515C20A66CCE0032AD6F /* ringedCircleView.swift */,
+				84E0B57220A6970B00966AAC /* CustomNumberButton.swift */,
 				84C0359720A0D23E00219736 /* UIColor + Extensions.swift */,
 				84C0356B209FBBCD00219736 /* Main.storyboard */,
 				84C0356E209FBBCD00219736 /* Assets.xcassets */,
@@ -268,6 +271,7 @@
 				84C0359820A0D23E00219736 /* UIColor + Extensions.swift in Sources */,
 				84C0356A209FBBCD00219736 /* ViewController.swift in Sources */,
 				84C03568209FBBCD00219736 /* AppDelegate.swift in Sources */,
+				84E0B57320A6970B00966AAC /* CustomNumberButton.swift in Sources */,
 				844A515D20A66CCE0032AD6F /* ringedCircleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

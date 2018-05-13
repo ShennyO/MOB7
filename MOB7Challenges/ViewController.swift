@@ -19,8 +19,9 @@ class ViewController: UIViewController {
 //        createRainbowView()
 //        createMirageView()
 //        createPatternView()
-        setUpBezierLayer()
+//        setUpBezierLayer()
 //        createCirclesWithShadowLayer()
+        createCustomNumberButton()
         
     }
     
@@ -198,6 +199,12 @@ class ViewController: UIViewController {
         circleView.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
         self.view.addSubview(circleView)
         
+    }
+    
+    func createCustomNumberButton() {
+        let button = customNumberButton(frame: CGRect(x: 0, y: 0, width: 250, height: 250))
+        button.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
+        self.view.addSubview(button)
     }
     
     
