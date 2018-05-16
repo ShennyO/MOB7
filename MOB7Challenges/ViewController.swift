@@ -21,7 +21,14 @@ class ViewController: UIViewController {
 //        createPatternView()
 //        setUpBezierLayer()
 //        createCirclesWithShadowLayer()
-        createCustomNumberButton()
+//        createGradientLayer()
+//        createCustomNumberButton()
+//        createViewAnimationOne()
+//        createAnimationsWithBounce()
+//        createAnimationsWithBounceAndLabels()
+//        createRedViewAnimation()
+        createSpinningSquares()
+//        createRotatingSquaresAnimation()
         
     }
     
@@ -51,11 +58,18 @@ class ViewController: UIViewController {
     
     
     func createChessBoardView() {
+        let baseViewFrame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width)
+        let baseView = UIView(frame: baseViewFrame)
+        baseView.center = self.view.center
+        baseView.layer.borderWidth = 5
+        baseView.layer.borderColor = UIColor.black.cgColor
+        baseView.layer.zPosition = 2
+        self.view.addSubview(baseView)
         let manager = ChessBoardManager(ViewController: self)
 
         for _ in 1...8 {
             for _ in 1...8 {
-                manager.createTilesView()
+                manager.createTilesView(passedView: baseView)
             }
         }
     }
@@ -202,9 +216,317 @@ class ViewController: UIViewController {
     }
     
     func createCustomNumberButton() {
+        self.createGradientLayer()
         let button = customNumberButton(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
         button.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
         self.view.addSubview(button)
+    }
+    
+    func createViewAnimationOne() {
+        let insetDistance = self.view.bounds.width * 0.25
+        let animationViewsWidthHeight = (self.view.bounds.width - insetDistance) / 5
+        let startingPoint = insetDistance / 2
+        for i in 0...4 {
+            let viewFrame = CGRect(x: startingPoint + (animationViewsWidthHeight * CGFloat(i)), y: self.view.bounds.maxY, width: animationViewsWidthHeight, height: animationViewsWidthHeight)
+            let colorView = UIView(frame: viewFrame)
+            colorView.backgroundColor = UIColor(hue: 0 + (CGFloat(0.04) * CGFloat(i)), saturation: 1, brightness: 1, alpha: 1)
+            self.view.addSubview(colorView)
+            
+            let labelFrame = CGRect(x: colorView.bounds.midX, y: colorView.bounds.midY, width: colorView.bounds.width * 0.4, height: colorView.bounds.height * 0.4)
+            let label = UILabel(frame: labelFrame)
+                        label.layer.position = CGPoint(x: colorView.bounds.midX, y: colorView.bounds.midY)
+            label.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
+            label.textColor = UIColor.white
+            label.textAlignment = .center
+            label.text = "\(i + 1)"
+            
+            colorView.addSubview(label)
+            
+            let delay = 0.25 + (CGFloat(i) * CGFloat(0.25))
+            UIView.animateKeyframes(withDuration: 0.5, delay: TimeInterval(delay), options: [], animations: {
+                colorView.frame = CGRect(x: startingPoint + (animationViewsWidthHeight * CGFloat(i)), y: self.view.bounds.maxY - animationViewsWidthHeight, width: animationViewsWidthHeight, height: animationViewsWidthHeight)
+            }, completion: { (bool) in
+                return bool
+            })
+        }
+    }
+    
+    func createAnimationsWithBounce() {
+        let insetDistance = self.view.bounds.width * 0.25
+        let animationViewsWidthHeight = (self.view.bounds.width - insetDistance) / 5
+        let startingPoint = insetDistance / 2
+        for i in 0...4 {
+            let viewFrame = CGRect(x: startingPoint + (animationViewsWidthHeight * CGFloat(i)), y: self.view.bounds.maxY, width: animationViewsWidthHeight, height: animationViewsWidthHeight)
+            let colorView = UIView(frame: viewFrame)
+            colorView.backgroundColor = UIColor(hue: 0 + (CGFloat(0.04) * CGFloat(i)), saturation: 1, brightness: 1, alpha: 1)
+            self.view.addSubview(colorView)
+            
+            let labelFrame = CGRect(x: colorView.bounds.midX, y: colorView.bounds.midY, width: colorView.bounds.width * 0.4, height: colorView.bounds.height * 0.4)
+            let label = UILabel(frame: labelFrame)
+            label.layer.position = CGPoint(x: colorView.bounds.midX, y: colorView.bounds.midY)
+            label.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
+            label.textColor = UIColor.white
+            label.textAlignment = .center
+            label.text = "\(i + 1)"
+            
+            colorView.addSubview(label)
+            
+            let delay = 0.25 + (CGFloat(i) * CGFloat(0.25))
+            UIView.animate(withDuration: 0.5, delay: TimeInterval(delay), usingSpringWithDamping: 0.2, initialSpringVelocity: 0.3, options: [], animations: {
+                colorView.frame = CGRect(x: startingPoint + (animationViewsWidthHeight * CGFloat(i)), y: self.view.bounds.maxY - animationViewsWidthHeight, width: animationViewsWidthHeight, height: animationViewsWidthHeight)
+            }, completion: { (bool) in
+                return bool
+            })
+        }
+    }
+    
+    
+    
+    func createAnimationsWithBounceAndLabels() {
+        
+        // CREATING THE VIEWS
+        let insetDistance = self.view.bounds.width * 0.25
+        let animationViewsWidthHeight = (self.view.bounds.width - insetDistance) / 5
+        let startingPoint = insetDistance / 2
+        for i in 0...4 {
+            let viewFrame = CGRect(x: startingPoint + (animationViewsWidthHeight * CGFloat(i)), y: self.view.bounds.maxY, width: animationViewsWidthHeight, height: animationViewsWidthHeight)
+            let colorView = UIView(frame: viewFrame)
+            colorView.backgroundColor = UIColor(hue: 0 + (CGFloat(0.04) * CGFloat(i)), saturation: 1, brightness: 1, alpha: 1)
+            self.view.addSubview(colorView)
+            
+            let labelFrame = CGRect(x: colorView.bounds.midX, y: colorView.bounds.midY, width: colorView.bounds.width * 0.4, height: colorView.bounds.height * 0.4)
+            let label = UILabel(frame: labelFrame)
+            label.layer.position = CGPoint(x: colorView.bounds.midX, y: colorView.bounds.midY)
+            label.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
+            label.textColor = UIColor.white
+            label.textAlignment = .center
+            label.text = "\(i + 1)"
+            
+            colorView.addSubview(label)
+            
+            let delay = 0.25 + (CGFloat(i) * CGFloat(0.25))
+            UIView.animate(withDuration: 0.5, delay: TimeInterval(delay), usingSpringWithDamping: 0.2, initialSpringVelocity: 0.3, options: [], animations: {
+                colorView.frame = CGRect(x: startingPoint + (animationViewsWidthHeight * CGFloat(i)), y: self.view.bounds.maxY - animationViewsWidthHeight, width: animationViewsWidthHeight, height: animationViewsWidthHeight)
+            }, completion: { (bool) in
+                return bool
+            })
+        }
+        
+        //Creating subtitle text label
+        let labelWidth = self.view.bounds.width - insetDistance
+        let subtitleFrame = CGRect(x: startingPoint, y: self.view.bounds.maxY - animationViewsWidthHeight - (self.view.bounds.height * 0.04), width: labelWidth, height: self.view.bounds.height * 0.04)
+        let subtitleLabel = UILabel(frame: subtitleFrame)
+        subtitleLabel.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+        subtitleLabel.alpha = 0.0
+        subtitleLabel.text = "subtitles"
+        subtitleLabel.textAlignment = .right
+        self.view.addSubview(subtitleLabel)
+        
+        UIView.animate(withDuration: 2.0, delay: TimeInterval(2.5), options: [], animations: {
+            subtitleLabel.alpha = 1.0
+        }) { (bool) in
+            return bool
+        }
+        
+        
+        //creating bold text label
+        let boldTextFrame = CGRect(x: startingPoint, y: self.view.bounds.maxY - animationViewsWidthHeight - (self.view.bounds.height * 0.08), width: labelWidth, height: self.view.bounds.height * 0.04)
+        let boldTextLabel = UILabel(frame: boldTextFrame)
+        boldTextLabel.backgroundColor = UIColor.gray
+        boldTextLabel.alpha = 0
+        boldTextLabel.text = "Bold Label"
+        boldTextLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 18)
+        boldTextLabel.textAlignment = .left
+        self.view.addSubview(boldTextLabel)
+        
+        UIView.animate(withDuration: 1.0, delay: TimeInterval(1.5), options: [], animations: {
+            boldTextLabel.alpha = 1.0
+        }) { (bool) in
+            return bool
+        }
+        
+        //creating gradient View
+        
+        
+        let gradientLayer = CAGradientLayer()
+        
+        let gradientFrame = CGRect(x: startingPoint, y: self.view.bounds.maxY - animationViewsWidthHeight - (self.view.bounds.height * 0.08) - 3, width: 0, height: 3)
+        let gradientView = UIView(frame: gradientFrame)
+        gradientView.backgroundColor = UIColor.clear
+        gradientView.clipsToBounds = true
+        
+        self.view.addSubview(gradientView)
+    
+        gradientLayer.frame = gradientView.bounds
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        gradientLayer.colors = [UIColor.red.cgColor, UIColor.green.cgColor]
+        gradientView.layer.addSublayer(gradientLayer)
+        
+        UIView.animate(withDuration: 1, delay: TimeInterval(3.5), options: [], animations: {
+            gradientView.frame = CGRect(x: startingPoint, y: self.view.bounds.maxY - animationViewsWidthHeight - (self.view.bounds.height * 0.08) - 2, width: labelWidth, height: 3)
+            gradientLayer.frame = gradientView.bounds
+        }) { (bool) in
+            return bool
+        }
+    }
+    
+    func animateSquare(frame1: CGRect, frame2: CGRect, delay: TimeInterval) {
+        let squareWidthHeight = (self.view.bounds.width - 90 / 2)
+        let frame1 = frame1
+        let squareOne = UIView(frame: frame1)
+        squareOne.alpha = 0
+        squareOne.backgroundColor = UIColor.blue.withAlphaComponent(0.4)
+        squareOne.transform = CGAffineTransform(rotationAngle: 90)
+        self.view.addSubview(squareOne)
+        
+        UIView.animate(withDuration: 0.25, delay: delay, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
+            squareOne.transform = CGAffineTransform(rotationAngle: 0)
+            squareOne.alpha = 1
+            squareOne.bounds = CGRect(x: 30, y: 30, width: squareWidthHeight, height: squareWidthHeight)
+            squareOne.frame = frame2
+        }) { (bool) in
+            return bool
+        }
+    }
+    
+    func createSpinningSquares() {
+        let squareWidthHeight = (self.view.bounds.width - 90 ) / 2
+        var squareCounter = 0
+        var delay: Double = 0.25
+        let smallSquareframes: [CGRect] = [CGRect(x: 30, y: 30, width: 50, height: 50), CGRect(x: 60 + squareWidthHeight, y: 30, width: 50, height: 50), CGRect(x: 30, y: 60 + squareWidthHeight, width: 50, height: 50), CGRect(x: 60 + squareWidthHeight, y: 60 + squareWidthHeight, width: 50, height: 50), CGRect(x: 30, y: 90 + (squareWidthHeight * 2), width: 50, height: 50), CGRect(x: 60 + squareWidthHeight, y: 90 + (squareWidthHeight * 2), width: 50, height: 50)]
+        
+        
+        
+        let bigSquareFrames: [CGRect] = [CGRect(x: 30, y: 30, width: squareWidthHeight, height: squareWidthHeight), CGRect(x: 60 + squareWidthHeight, y: 30, width: squareWidthHeight, height: squareWidthHeight), CGRect(x: 30, y: 60 + squareWidthHeight, width: squareWidthHeight, height: squareWidthHeight), CGRect(x: 60 + squareWidthHeight, y: 60 + squareWidthHeight, width: squareWidthHeight, height: squareWidthHeight), CGRect(x: 30, y: 90 + (squareWidthHeight * 2), width: squareWidthHeight, height: squareWidthHeight), CGRect(x: 60 + squareWidthHeight, y: 90 + (squareWidthHeight * 2), width: squareWidthHeight, height: squareWidthHeight)]
+        
+        
+        for i in 0...5 {
+            animateSquare(frame1: smallSquareframes[i], frame2: bigSquareFrames[i], delay: delay)
+            delay += 0.25
+        }
+        
+    }
+    
+    
+    
+    func createRotatingSquaresAnimation() {
+        
+        //first square
+        let squareWidthHeight = self.view.bounds.width - 90
+        let frame1 = CGRect(x: 30, y: 30, width: 50, height: 50)
+        let squareOne = UIView(frame: frame1)
+        squareOne.alpha = 0
+        squareOne.backgroundColor = UIColor.blue.withAlphaComponent(0.4)
+        squareOne.transform = CGAffineTransform(rotationAngle: 90)
+        self.view.addSubview(squareOne)
+        
+        UIView.animate(withDuration: 0.25, delay: 0.25, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
+            squareOne.transform = CGAffineTransform(rotationAngle: 0)
+            squareOne.alpha = 1
+            squareOne.bounds = CGRect(x: 30, y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
+            squareOne.frame = CGRect(x: 30, y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
+        }) { (bool) in
+            return bool
+        }
+        
+        //second square
+        
+        let frame2 = CGRect(x: 60 + (squareWidthHeight / 2), y: 30, width: 50, height: 50)
+        let squareTwo = UIView(frame: frame2)
+        squareTwo.alpha = 0
+        squareTwo.backgroundColor = UIColor.blue.withAlphaComponent(0.4)
+        squareTwo.transform = CGAffineTransform(rotationAngle: -90)
+        self.view.addSubview(squareTwo)
+        
+        UIView.animate(withDuration: 0.25, delay: 0.5, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
+            squareTwo.transform = CGAffineTransform(rotationAngle: 0)
+            squareTwo.alpha = 1
+            //changing the size of the square with bounds
+            squareTwo.bounds = CGRect(x: 30, y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
+            //adjusting the position of the square with frame
+            squareTwo.frame = CGRect(x: 60 + (squareWidthHeight / 2), y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
+        }) { (bool) in
+            return bool
+        }
+        
+        //third square
+        let frame3 = CGRect(x: 30, y: 60 + (squareWidthHeight / 2), width: 50, height: 50)
+        let squareThree = UIView(frame: frame3)
+        squareThree.alpha = 0
+        squareThree.backgroundColor = UIColor.blue.withAlphaComponent(0.4)
+        squareThree.transform = CGAffineTransform(rotationAngle: -90)
+        self.view.addSubview(squareThree)
+
+        UIView.animate(withDuration: 0.25, delay: 0.75, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
+            squareThree.transform = CGAffineTransform(rotationAngle: 0)
+            squareThree.alpha = 1
+            squareThree.bounds = CGRect(x: 30, y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
+            squareThree.frame = CGRect(x: 30, y: 60 + (squareWidthHeight / 2), width: squareWidthHeight / 2, height: squareWidthHeight / 2)
+        }) { (bool) in
+            return bool
+        }
+    }
+    
+    
+    func createRedViewAnimation() {
+        
+        //Creating original red View
+        
+        let viewFrame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height).insetBy(dx: 20, dy: 20)
+        let view = UIView(frame: viewFrame)
+        view.backgroundColor = UIColor.red
+        view.layer.cornerRadius = 10
+        self.view.addSubview(view)
+        
+        //animate the frame and animate the corner radius
+        let frameTwo = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 45, height: 45)
+        
+        UIView.animate(withDuration: 0.75, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: [], animations: {
+            view.frame = frameTwo
+            view.layer.cornerRadius = frameTwo.height / 2
+            view.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
+        }) { (bool) in
+            return bool
+        }
+        
+        //animate the y position and height of the view
+        let frameThree = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY - 150, width: 45, height: 75)
+        
+        UIView.animate(withDuration: 0.75, delay: 1.5, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
+            view.frame = frameThree
+            view.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY - 150)
+        }) { (bool) in
+            return bool
+        }
+        
+        //animate the width of the view (we can use insets)
+        UIView.animate(withDuration: 1, delay: 2.5, usingSpringWithDamping: 0.4, initialSpringVelocity: 1, options: [], animations: {
+            view.frame = view.frame.insetBy(dx: -100, dy: 0)
+        }) { (bool) in
+            return bool
+        }
+        
+        //animate the height of the view
+        UIView.animate(withDuration: 1, delay: 3.5, usingSpringWithDamping: 0.4, initialSpringVelocity: 1, options: [], animations: {
+            view.frame = view.frame.insetBy(dx: 0, dy: -100)
+            view.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY - 50)
+        }) { (bool) in
+            return bool
+        }
+        
+        //animate to the blue ball
+        let frameFour = CGRect(x: self.view.bounds.midX, y: self.view.bounds.maxY - 150, width: 45, height: 45)
+        
+        UIView.animate(withDuration: 0.6, delay: 4.5, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
+            view.frame = frameFour
+            view.layer.cornerRadius = frameFour.height / 2
+            view.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.maxY - 150)
+            view.backgroundColor = UIColor.blue.withAlphaComponent(0.6)
+        }) { (bool) in
+            return bool
+        }
+        
     }
     
     
@@ -219,6 +541,7 @@ class ChessBoardManager {
     var columnCounter: CGFloat = 0
     var viewController: UIViewController
     var isBlack: Bool = false
+    
     
     init(ViewController: UIViewController) {
         self.viewController = ViewController
@@ -235,7 +558,7 @@ class ChessBoardManager {
         case true:
             print("black || column: \(columnCounter) row: \(rowCounter)")
             isBlack = !isBlack
-            return UIColor.black
+            return UIColor.red
         }
         
     }
@@ -250,12 +573,12 @@ class ChessBoardManager {
         
     }
     
-    func createTilesView() {
+    func createTilesView(passedView: UIView) {
         let position = tilePosition(column: columnCounter, row: rowCounter)
         let tileRect = CGRect(x: position.x, y: position.y, width: viewController.view.bounds.width / 8, height: viewController.view.bounds.width / 8)
         let tileView = UIView(frame: tileRect)
         tileView.backgroundColor = tileColor()
-        viewController.view.addSubview(tileView)
+        passedView.addSubview(tileView)
         //after we added our view, we want to reset the positions
         
         if columnCounter == 7 {
@@ -267,7 +590,6 @@ class ChessBoardManager {
         }
         
     }
-    
     
 }
 
