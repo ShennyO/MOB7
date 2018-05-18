@@ -20,15 +20,15 @@ class ViewController: UIViewController {
 //        createMirageView()
 //        createPatternView()
 //        setUpBezierLayer()
-//        createCirclesWithShadowLayer()
+        createCirclesWithShadowLayer()
 //        createGradientLayer()
 //        createCustomNumberButton()
 //        createViewAnimationOne()
 //        createAnimationsWithBounce()
 //        createAnimationsWithBounceAndLabels()
 //        createRedViewAnimation()
-        createSpinningSquares()
-//        createRotatingSquaresAnimation()
+//        createSpinningSquares()
+//        loadingAnimation()
         
     }
     
@@ -410,64 +410,6 @@ class ViewController: UIViewController {
     
     
     
-    func createRotatingSquaresAnimation() {
-        
-        //first square
-        let squareWidthHeight = self.view.bounds.width - 90
-        let frame1 = CGRect(x: 30, y: 30, width: 50, height: 50)
-        let squareOne = UIView(frame: frame1)
-        squareOne.alpha = 0
-        squareOne.backgroundColor = UIColor.blue.withAlphaComponent(0.4)
-        squareOne.transform = CGAffineTransform(rotationAngle: 90)
-        self.view.addSubview(squareOne)
-        
-        UIView.animate(withDuration: 0.25, delay: 0.25, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
-            squareOne.transform = CGAffineTransform(rotationAngle: 0)
-            squareOne.alpha = 1
-            squareOne.bounds = CGRect(x: 30, y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
-            squareOne.frame = CGRect(x: 30, y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
-        }) { (bool) in
-            return bool
-        }
-        
-        //second square
-        
-        let frame2 = CGRect(x: 60 + (squareWidthHeight / 2), y: 30, width: 50, height: 50)
-        let squareTwo = UIView(frame: frame2)
-        squareTwo.alpha = 0
-        squareTwo.backgroundColor = UIColor.blue.withAlphaComponent(0.4)
-        squareTwo.transform = CGAffineTransform(rotationAngle: -90)
-        self.view.addSubview(squareTwo)
-        
-        UIView.animate(withDuration: 0.25, delay: 0.5, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
-            squareTwo.transform = CGAffineTransform(rotationAngle: 0)
-            squareTwo.alpha = 1
-            //changing the size of the square with bounds
-            squareTwo.bounds = CGRect(x: 30, y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
-            //adjusting the position of the square with frame
-            squareTwo.frame = CGRect(x: 60 + (squareWidthHeight / 2), y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
-        }) { (bool) in
-            return bool
-        }
-        
-        //third square
-        let frame3 = CGRect(x: 30, y: 60 + (squareWidthHeight / 2), width: 50, height: 50)
-        let squareThree = UIView(frame: frame3)
-        squareThree.alpha = 0
-        squareThree.backgroundColor = UIColor.blue.withAlphaComponent(0.4)
-        squareThree.transform = CGAffineTransform(rotationAngle: -90)
-        self.view.addSubview(squareThree)
-
-        UIView.animate(withDuration: 0.25, delay: 0.75, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [], animations: {
-            squareThree.transform = CGAffineTransform(rotationAngle: 0)
-            squareThree.alpha = 1
-            squareThree.bounds = CGRect(x: 30, y: 30, width: squareWidthHeight / 2, height: squareWidthHeight / 2)
-            squareThree.frame = CGRect(x: 30, y: 60 + (squareWidthHeight / 2), width: squareWidthHeight / 2, height: squareWidthHeight / 2)
-        }) { (bool) in
-            return bool
-        }
-    }
-    
     
     func createRedViewAnimation() {
         
@@ -528,6 +470,107 @@ class ViewController: UIViewController {
         }
         
     }
+    
+        
+    
+    
+    func loadingAnimation() {
+        
+        //Create the View to place the layers on
+        
+        let viewFrame = CGRect(x: 0, y: 0, width: 800, height: 500)
+        let view = UIView(frame: viewFrame)
+        view.backgroundColor = UIColor.white
+        self.view.addSubview(view)
+        
+        //Creating the shape layer
+        
+        let shape = CAShapeLayer()
+        
+        //Create the BezierPath, the curvy lines that our shape layer adheres to
+        
+        let path = UIBezierPath()
+        
+        let point0 = CGPoint(x: 0, y: 350)
+        let point1 = CGPoint(x: 200, y: 250)
+        let point2 = CGPoint(x: 550, y: 400)
+        let point3 = CGPoint(
+            x: viewFrame.maxX,
+            y: point2.y - 100
+        )
+        
+        let control0 = CGPoint(x: point0.x + 60, y: point0.y)
+        
+        let control1 = CGPoint(x: point1.x - 110, y: point1.y)
+        
+        let control2 = CGPoint(x: point1.x + 110, y: point1.y)
+        let control3 = CGPoint(x: point2.x - 110, y: point2.y)
+        let control4 = CGPoint(x: point2.x + 120, y: point2.y)
+        let control5 = CGPoint(x: point3.x - 100, y: point3.y)
+        
+        
+        path.move(to: point0)
+        path.addCurve(to: point1, controlPoint1: control0, controlPoint2: control1)
+        path.addCurve(to: point2, controlPoint1: control2, controlPoint2: control3)
+        path.addCurve(to: point3, controlPoint1: control4, controlPoint2: control5)
+        
+        //Draw the actual shape of the shapelayer
+        
+        shape.path = path.cgPath
+        //the stroke color actually gets animated
+        shape.strokeColor = UIColor.red.cgColor
+        shape.lineWidth = 5
+        shape.strokeStart = 0
+        shape.strokeEnd = 0.1
+        shape.fillColor = UIColor.clear.cgColor
+        
+        view.layer.addSublayer(shape)
+        
+        
+//        let strokeStartAnim = CABasicAnimation()
+//        strokeStartAnim.toValue = 0.7
+//        strokeStartAnim.repeatCount = 100
+//        strokeStartAnim.keyPath = #keyPath(CAShapeLayer.strokeStart)
+//        strokeStartAnim.duration = 5
+//        strokeStartAnim.beginTime = 0
+//        strokeStartAnim.speed = 1
+//        shape.add(strokeStartAnim, forKey: "startAnim")
+
+        let strokeEndAnim = CABasicAnimation()
+        strokeEndAnim.toValue = 1
+        strokeEndAnim.repeatCount = Float(Int.max)
+        strokeEndAnim.keyPath = #keyPath(CAShapeLayer.strokeEnd)
+        strokeEndAnim.duration = 5
+        strokeEndAnim.beginTime = 0
+        strokeEndAnim.speed = 1
+        shape.add(strokeEndAnim, forKey: "endAnim")
+    
+
+//        let groupAnim = CAAnimationGroup()
+//        groupAnim.animations = [strokeStartAnim, strokeEndAnim]
+//        groupAnim.duration = 3.5
+//        groupAnim.beginTime = 0
+//        groupAnim.speed = 1
+//        groupAnim.autoreverses = true
+//        groupAnim.repeatCount = .greatestFiniteMagnitude
+//        shape.add(groupAnim, forKey: "groupAnimation")
+//
+//        let trackLayer = CAShapeLayer()
+//        trackLayer.fillColor = UIColor.blue.cgColor
+//        trackLayer.backgroundColor = UIColor.blue.cgColor
+//        trackLayer.frame = CGRect(origin: point0, size: CGSize(width: 12, height: 8))
+        
+//        let keyFrameAnim = CAKeyframeAnimation()
+//        keyFrameAnim.path = path.cgPath
+//        keyFrameAnim.keyPath = #keyPath(CAShapeLayer.position)
+//        keyFrameAnim.isRemovedOnCompletion = true
+//        keyFrameAnim.duration = 3
+//        keyFrameAnim.calculationMode = kCAAnimationLinear
+//        keyFrameAnim.repeatCount = Float(Int.max)
+//        trackLayer.add(keyFrameAnim, forKey: "keyframe")
+//        shape.addSublayer(trackLayer)
+    }
+    
     
     
 }
@@ -591,5 +634,17 @@ class ChessBoardManager {
         
     }
     
+}
+
+extension UIView {
+    func rotate360Degrees(duration: CFTimeInterval = 3) {
+        let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
+        rotateAnimation.fromValue = 0.0
+        rotateAnimation.toValue = CGFloat(Double.pi * 2)
+        rotateAnimation.isRemovedOnCompletion = false
+        rotateAnimation.duration = duration
+        rotateAnimation.repeatCount=Float.infinity
+        self.layer.add(rotateAnimation, forKey: nil)
+    }
 }
 
