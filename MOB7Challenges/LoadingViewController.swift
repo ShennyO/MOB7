@@ -42,8 +42,41 @@ class LoadingViewController: UIViewController {
         let circleWidthHeight = baseFrame.width
         let path = UIBezierPath(ovalIn: CGRect(x: -circleWidthHeight / 2, y: -circleWidthHeight / 2, width: circleWidthHeight, height: circleWidthHeight))
         
+        //Top triangle on the right side
+        let topRightTriangle = UIBezierPath()
+        let rtStartingPoint = CGPoint(x: baseView.bounds.maxX - (baseView.bounds.maxX * 0.2415), y: baseView.bounds.midY - (baseView.bounds.midY * 0.543))
+        let rtPointTwo = CGPoint(x: baseView.bounds.maxX - (baseView.bounds.maxX * 0.06), y: baseView.bounds.midY - (baseView.bounds.midY * 0.8756))
+        let rtPointThree = CGPoint(x: baseView.bounds.maxX - (baseView.bounds.maxX * 0.012), y: baseView.bounds.midY - (baseView.bounds.midY * 0.362))
+        topRightTriangle.move(to: rtStartingPoint)
+        topRightTriangle.addLine(to: rtPointTwo)
+        topRightTriangle.addLine(to: rtPointThree)
+        topRightTriangle.close()
+        
+        //bottom triangle on the left side
+        let bottomLeftTriangle = UIBezierPath()
+        let ltStartingPoint = CGPoint(x: baseView.bounds.minX + (baseView.bounds.maxX * 0.2415), y: baseView.bounds.midY + (baseView.bounds.midY * 0.543))
+        let ltPointTwo = CGPoint(x: baseView.bounds.minX + (baseView.bounds.maxX * 0.06), y: baseView.bounds.midY + (baseView.bounds.midY * 0.8756))
+        let ltPointThree = CGPoint(x: baseView.bounds.minX + (baseView.bounds.maxX * 0.012), y: baseView.bounds.midY + (baseView.bounds.midY * 0.362))
+        bottomLeftTriangle.move(to: ltStartingPoint)
+        bottomLeftTriangle.addLine(to: ltPointTwo)
+        bottomLeftTriangle.addLine(to: ltPointThree)
+        bottomLeftTriangle.close()
+        
+        
+        
+        
     
 //        MARK: CREATING OUR CASHAPELAYERS
+        let triangleLayerOne = CAShapeLayer()
+        triangleLayerOne.path = topRightTriangle.cgPath
+        triangleLayerOne.strokeColor = UIColor.red.cgColor
+        triangleLayerOne.fillColor = UIColor.red.cgColor
+        
+        let triangleLayerTwo = CAShapeLayer()
+        triangleLayerTwo.path = bottomLeftTriangle.cgPath
+        triangleLayerTwo.strokeColor = UIColor.blue.cgColor
+        triangleLayerTwo.fillColor = UIColor.blue.cgColor
+        
         let layerOne = CAShapeLayer()
         layerOne.position = CGPoint(x: baseView.bounds.midX, y: baseView.bounds.midY)
         layerOne.path = path.cgPath
@@ -67,6 +100,8 @@ class LoadingViewController: UIViewController {
 
         baseView.layer.addSublayer(layerOne)
         baseView.layer.addSublayer(layerTwo)
+        baseView.layer.addSublayer(triangleLayerOne)
+        baseView.layer.addSublayer(triangleLayerTwo)
         
     }
 
