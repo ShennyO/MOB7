@@ -10,8 +10,18 @@ import UIKit
 
 class LoadingViewController: UIViewController {
 
+    var baseView: UIView!
+    var colorView: UIView!
+    var triangleLayerOne: CAShapeLayer!
+    var triangleLayerTwo: CAShapeLayer!
+    var baseCircleLayer: CAShapeLayer!
+    var layerOne: CAShapeLayer!
+    var layerTwo: CAShapeLayer!
+    var rotateAnimation: CABasicAnimation!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.layer.backgroundColor = UIColor(rgb: 0x333333).cgColor
         //not showing up because i forgot to call the function
         createLoadingAnimation()
         // Do any additional setup after loading the view.
@@ -21,88 +31,249 @@ class LoadingViewController: UIViewController {
 
     func createLoadingAnimation() {
         
+        
+        
         //MARK: CREATING THE BASE VIEW
         
         //first thing we want to do is create a base view in the middle of the screen
         let baseFrame = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: self.view.bounds.width * 0.4, height: self.view.bounds.width * 0.4)
-        let baseView = UIView(frame: baseFrame)
+        baseView = UIView(frame: baseFrame)
         //center rearranges the center point of our view
         baseView.center = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
         baseView.layer.cornerRadius = baseFrame.width / 2
+        baseView.layer.backgroundColor = self.view.backgroundColor?.cgColor
+        baseView.layer.zPosition = 3
         self.view.addSubview(baseView)
         
-        //if I want to draw the triangle, or arrows, would I add extra points to the bezier curves?
-        //Would I have to customly make my bezier curves to include the triangle in the end?
-        //instead of using OvalIn, I think I have to make my bezier curves manually
-        //I think we can just add the triangle manually within the circular bezier path we have
+        colorView = UIView(frame: baseFrame)
+        colorView.center = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
+        colorView.layer.zPosition = 2
+        colorView.layer.cornerRadius = baseFrame.width / 2
+        colorView.backgroundColor = UIColor.green
+//        colorView.alpha = 0
+        self.view.addSubview(colorView)
         
+        //MARK: CREATING THE BEZIER PATHS
         
-        
-        //MARK: CREATING THE CIRCULAR BEZIER PATH
         let circleWidthHeight = baseFrame.width
         let path = UIBezierPath(ovalIn: CGRect(x: -circleWidthHeight / 2, y: -circleWidthHeight / 2, width: circleWidthHeight, height: circleWidthHeight))
         
-        //Top triangle on the right side
-        let topRightTriangle = UIBezierPath()
-        let rtStartingPoint = CGPoint(x: baseView.bounds.maxX - (baseView.bounds.maxX * 0.2415), y: baseView.bounds.midY - (baseView.bounds.midY * 0.543))
-        let rtPointTwo = CGPoint(x: baseView.bounds.maxX - (baseView.bounds.maxX * 0.06), y: baseView.bounds.midY - (baseView.bounds.midY * 0.8756))
-        let rtPointThree = CGPoint(x: baseView.bounds.maxX - (baseView.bounds.maxX * 0.012), y: baseView.bounds.midY - (baseView.bounds.midY * 0.362))
-        topRightTriangle.move(to: rtStartingPoint)
-        topRightTriangle.addLine(to: rtPointTwo)
-        topRightTriangle.addLine(to: rtPointThree)
-        topRightTriangle.close()
         
-        //bottom triangle on the left side
-        let bottomLeftTriangle = UIBezierPath()
-        let ltStartingPoint = CGPoint(x: baseView.bounds.minX + (baseView.bounds.maxX * 0.2415), y: baseView.bounds.midY + (baseView.bounds.midY * 0.543))
-        let ltPointTwo = CGPoint(x: baseView.bounds.minX + (baseView.bounds.maxX * 0.06), y: baseView.bounds.midY + (baseView.bounds.midY * 0.8756))
-        let ltPointThree = CGPoint(x: baseView.bounds.minX + (baseView.bounds.maxX * 0.012), y: baseView.bounds.midY + (baseView.bounds.midY * 0.362))
-        bottomLeftTriangle.move(to: ltStartingPoint)
-        bottomLeftTriangle.addLine(to: ltPointTwo)
-        bottomLeftTriangle.addLine(to: ltPointThree)
-        bottomLeftTriangle.close()
+        //right triangle
+        let rightTriangle = UIBezierPath()
+        let rightStartingPoint = CGPoint(x: baseView.bounds.maxX - (baseView.bounds.maxX * 0.14), y: baseView.bounds.midY - (baseView.bounds.midY * 0.2))
+        let rightSecondPoint = CGPoint(x: baseView.bounds.maxX + (baseView.bounds.maxX * 0.1266), y: baseView.bounds.midY - (baseView.bounds.midY * 0.2))
+        let rightThirdPoint = CGPoint(x: baseView.bounds.maxX - 1, y: baseView.bounds.midY + (baseView.bounds.midY * 0.266))
+        rightTriangle.move(to: rightStartingPoint)
+        rightTriangle.addLine(to: rightSecondPoint)
+        rightTriangle.addLine(to: rightThirdPoint)
+        rightTriangle.close()
+        
+        //left triangle
+        let leftTriangle = UIBezierPath()
+        let leftStartingPoint = CGPoint(x: baseView.bounds.minX + (baseView.bounds.maxX * 0.14), y: baseView.bounds.midY + (baseView.bounds.midY * 0.2))
+        let leftSecondPoint = CGPoint(x: baseView.bounds.minX - (baseView.bounds.maxX * 0.1266), y: baseView.bounds.midY + (baseView.bounds.midY * 0.2))
+        let leftThirdPoint = CGPoint(x: baseView.bounds.minX + 1, y: baseView.bounds.midY - (baseView.bounds.midY * 0.266))
+        leftTriangle.move(to: leftStartingPoint)
+        leftTriangle.addLine(to: leftSecondPoint)
+        leftTriangle.addLine(to: leftThirdPoint)
+        leftTriangle.close()
         
         
-        
+        //MARK: BEZIER PATHS END
         
     
-//        MARK: CREATING OUR CASHAPELAYERS
-        let triangleLayerOne = CAShapeLayer()
-        triangleLayerOne.path = topRightTriangle.cgPath
-        triangleLayerOne.strokeColor = UIColor.red.cgColor
-        triangleLayerOne.fillColor = UIColor.red.cgColor
+        //MARK: CREATING OUR CASHAPELAYERS
         
-        let triangleLayerTwo = CAShapeLayer()
-        triangleLayerTwo.path = bottomLeftTriangle.cgPath
-        triangleLayerTwo.strokeColor = UIColor.blue.cgColor
-        triangleLayerTwo.fillColor = UIColor.blue.cgColor
+        //adding the top right triangle layer
+        triangleLayerOne = CAShapeLayer()
+        triangleLayerOne.path = rightTriangle.cgPath
+        triangleLayerOne.strokeColor = UIColor.white.cgColor
+        triangleLayerOne.fillColor = UIColor.white.cgColor
+        triangleLayerOne.zPosition = 5
         
-        let layerOne = CAShapeLayer()
+        //adding the bottom left triangle layer
+        triangleLayerTwo = CAShapeLayer()
+        triangleLayerTwo.path = leftTriangle.cgPath
+        triangleLayerTwo.strokeColor = UIColor.white.cgColor
+        triangleLayerTwo.fillColor = UIColor.white.cgColor
+        triangleLayerTwo.zPosition = 5
+        
+        //adding the full circle
+        baseCircleLayer = CAShapeLayer()
+        baseCircleLayer.path = path.cgPath
+        baseCircleLayer.position = CGPoint(x: baseView.bounds.midX, y: baseView.bounds.midY)
+        baseCircleLayer.fillColor = UIColor.clear.cgColor
+        baseCircleLayer.strokeColor = UIColor.white.cgColor
+        baseCircleLayer.lineWidth = 16
+        
+        
+        
+        //adding the white curve one
+        layerOne = CAShapeLayer()
         layerOne.position = CGPoint(x: baseView.bounds.midX, y: baseView.bounds.midY)
         layerOne.path = path.cgPath
         layerOne.fillColor = UIColor.clear.cgColor
-        layerOne.strokeColor = UIColor.blue.cgColor
-        layerOne.lineWidth = 10
-        layerOne.strokeStart = 0
-        layerOne.strokeEnd = 0.4
+        layerOne.strokeColor = self.view.backgroundColor?.cgColor
+        layerOne.lineWidth = 18
+        layerOne.strokeStart = 0.5
+        layerOne.strokeEnd = 0.6
+        layerOne.zPosition = 4
         
         //positions of our sublayer's aren't centered to its view
         //To position it in the middle, we have to have the circle's x & y equal to the negative of our circle's width divided by two
         
-        let layerTwo = CAShapeLayer()
+        //adding white curve two
+        layerTwo = CAShapeLayer()
         layerTwo.position = CGPoint(x: baseView.bounds.midX, y: baseView.bounds.midY)
         layerTwo.path = path.cgPath
         layerTwo.fillColor = UIColor.clear.cgColor
-        layerTwo.strokeColor = UIColor.red.cgColor
-        layerTwo.lineWidth = 10
-        layerTwo.strokeStart = 0.5
-        layerTwo.strokeEnd = 0.9
-
+        layerTwo.strokeColor = self.view.backgroundColor?.cgColor
+        layerTwo.lineWidth = 18
+        layerTwo.strokeStart = 0
+        layerTwo.strokeEnd = 0.1
+        layerTwo.zPosition = 4
+        
+        //adding out triangle sublayers and curved sublayers to our baseview sublayer
+        
         baseView.layer.addSublayer(layerOne)
         baseView.layer.addSublayer(layerTwo)
+        baseView.layer.addSublayer(baseCircleLayer)
         baseView.layer.addSublayer(triangleLayerOne)
         baseView.layer.addSublayer(triangleLayerTwo)
         
-    }
+        
+        //Animation for the top curve
+        
+        let strokeStartAnim = CABasicAnimation()
+        strokeStartAnim.toValue = 0.5
+        strokeStartAnim.repeatCount = Float(Int.max)
+        strokeStartAnim.keyPath = #keyPath(CAShapeLayer.strokeStart)
+        
+        let strokeEndAnim = CABasicAnimation()
+        strokeEndAnim.toValue = 0.9
+        strokeEndAnim.repeatCount = Float(Int.max)
+        strokeEndAnim.keyPath = #keyPath(CAShapeLayer.strokeEnd)
+        
+        let groupAnim = CAAnimationGroup()
+        groupAnim.animations = [strokeStartAnim, strokeEndAnim]
+        groupAnim.duration = 0.6
+        groupAnim.beginTime = 0
+        groupAnim.speed = 1
+        groupAnim.autoreverses = true
+        groupAnim.repeatCount = .greatestFiniteMagnitude
+        baseView.layer.sublayers![0].add(groupAnim, forKey: "groupAnimation")
 
+        
+        //Animation for the red curve
+        
+        let strokeStartAnimTwo = CABasicAnimation()
+        strokeStartAnimTwo.toValue = 0
+        strokeStartAnimTwo.repeatCount = Float(Int.max)
+        strokeStartAnimTwo.keyPath = #keyPath(CAShapeLayer.strokeStart)
+        
+        let strokeEndAnimTwo = CABasicAnimation()
+        strokeEndAnimTwo.toValue = 0.4
+        strokeStartAnimTwo.repeatCount = Float(Int.max)
+        strokeEndAnimTwo.keyPath = #keyPath(CAShapeLayer.strokeEnd)
+        
+        let groupAnimTwo = CAAnimationGroup()
+        groupAnimTwo.animations = [strokeStartAnimTwo, strokeEndAnimTwo]
+        groupAnimTwo.duration = 0.6
+        groupAnimTwo.beginTime = 0
+        groupAnimTwo.speed = 1
+        groupAnimTwo.autoreverses = true
+        groupAnimTwo.repeatCount = .greatestFiniteMagnitude
+        baseView.layer.sublayers![1].add(groupAnimTwo, forKey: "groupAnimationTwo")
+
+       
+        
+        let duration: CFTimeInterval = 1.25
+        //type of the animation
+        rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
+        rotateAnimation.fromValue = 0.0
+        rotateAnimation.toValue = CGFloat(Double.pi * 2)
+        rotateAnimation.isRemovedOnCompletion = false
+        rotateAnimation.duration = duration
+        rotateAnimation.repeatCount = Float.infinity
+        baseView.layer.add(rotateAnimation, forKey: "rotation")
+        
+    }
+    
+    //animating the filling in of the circle
+    func endAnimations(completion: @escaping() -> ()) {
+        
+        let strokeStartAnim = CABasicAnimation()
+        strokeStartAnim.toValue = 0.485
+        strokeStartAnim.repeatCount = Float(Int.max)
+        strokeStartAnim.keyPath = #keyPath(CAShapeLayer.strokeStart)
+        
+        let strokeEndAnim = CABasicAnimation()
+        strokeEndAnim.toValue = 0.485
+        strokeEndAnim.repeatCount = Float(Int.max)
+        strokeEndAnim.keyPath = #keyPath(CAShapeLayer.strokeEnd)
+        
+        let groupAnim = CAAnimationGroup()
+        groupAnim.animations = [strokeStartAnim, strokeEndAnim]
+        groupAnim.duration = 2
+        groupAnim.beginTime = 0
+        groupAnim.speed = 1
+        baseView.layer.sublayers![0].add(groupAnim, forKey: "groupEndAnimation")
+        
+        
+        let strokeStartAnimTwo = CABasicAnimation()
+        strokeStartAnimTwo.toValue = 0
+        strokeStartAnimTwo.repeatCount = Float(Int.max)
+        strokeStartAnimTwo.keyPath = #keyPath(CAShapeLayer.strokeStart)
+        
+        let strokeEndAnimTwo = CABasicAnimation()
+        strokeEndAnimTwo.toValue = 0
+        strokeStartAnimTwo.repeatCount = Float(Int.max)
+        strokeEndAnimTwo.keyPath = #keyPath(CAShapeLayer.strokeEnd)
+        
+        let groupAnimTwo = CAAnimationGroup()
+        groupAnimTwo.animations = [strokeStartAnimTwo, strokeEndAnimTwo]
+        groupAnimTwo.duration = 2
+        groupAnimTwo.beginTime = 0
+        groupAnimTwo.speed = 1
+        baseView.layer.sublayers![1].add(groupAnimTwo, forKey: "groupEndAnimationTwo")
+        completion()
+    }
+    //removing the clear layers
+    func removeTransparentLayers(completion: @escaping ()->()) {
+        self.layerOne.removeFromSuperlayer()
+        self.layerTwo.removeFromSuperlayer()
+        completion()
+    }
+    
+    
+    
+    @IBAction func stopAnimationsTapped(_ sender: Any) {
+        self.endAnimations() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { // change 2 to desired number of seconds
+                // Your code with delay
+                //removing the clear layers
+                self.removeTransparentLayers {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                        self.baseView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
+                        UIView.animate(withDuration: 0.4, delay: 0, options: [], animations: {
+                            self.baseView.frame = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                            self.baseView.layer.cornerRadius = 0
+                        }, completion: { (bool) in
+                            return
+                        })
+                        
+                        UIView.animate(withDuration: 0.5, delay: 0.7, options: [], animations: {
+                            self.colorView.alpha = 0
+                        }, completion: { (bool) in
+                            return
+                        })
+                        
+                    })
+                }
+            }
+        
+        }
+    }
+    
 }
