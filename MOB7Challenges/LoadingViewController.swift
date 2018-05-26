@@ -15,6 +15,7 @@ class LoadingViewController: UIViewController {
     var triangleLayerOne: CAShapeLayer!
     var triangleLayerTwo: CAShapeLayer!
     var baseCircleLayer: CAShapeLayer!
+    var checkMark: CAShapeLayer!
     var layerOne: CAShapeLayer!
     var layerTwo: CAShapeLayer!
     var rotateAnimation: CABasicAnimation!
@@ -50,10 +51,13 @@ class LoadingViewController: UIViewController {
         colorView.layer.zPosition = 2
         colorView.layer.cornerRadius = baseFrame.width / 2
         colorView.backgroundColor = UIColor.green
-//        colorView.alpha = 0
         self.view.addSubview(colorView)
         
         //MARK: CREATING THE BEZIER PATHS
+        
+        //creating bezier paths for the checkmark
+        
+        
         
         let circleWidthHeight = baseFrame.width
         let path = UIBezierPath(ovalIn: CGRect(x: -circleWidthHeight / 2, y: -circleWidthHeight / 2, width: circleWidthHeight, height: circleWidthHeight))
@@ -108,7 +112,6 @@ class LoadingViewController: UIViewController {
         baseCircleLayer.lineWidth = 16
         
         
-        
         //adding the white curve one
         layerOne = CAShapeLayer()
         layerOne.position = CGPoint(x: baseView.bounds.midX, y: baseView.bounds.midY)
@@ -141,6 +144,7 @@ class LoadingViewController: UIViewController {
         baseView.layer.addSublayer(baseCircleLayer)
         baseView.layer.addSublayer(triangleLayerOne)
         baseView.layer.addSublayer(triangleLayerTwo)
+        createCheckMark()
         
         
         //Animation for the top curve
@@ -165,7 +169,7 @@ class LoadingViewController: UIViewController {
         baseView.layer.sublayers![0].add(groupAnim, forKey: "groupAnimation")
 
         
-        //Animation for the red curve
+        //Animation for the bottom curve
         
         let strokeStartAnimTwo = CABasicAnimation()
         strokeStartAnimTwo.toValue = 0
@@ -203,14 +207,13 @@ class LoadingViewController: UIViewController {
     //animating the filling in of the circle
     func endAnimations(completion: @escaping() -> ()) {
         
+        
         let strokeStartAnim = CABasicAnimation()
         strokeStartAnim.toValue = 0.485
-        strokeStartAnim.repeatCount = Float(Int.max)
         strokeStartAnim.keyPath = #keyPath(CAShapeLayer.strokeStart)
         
         let strokeEndAnim = CABasicAnimation()
         strokeEndAnim.toValue = 0.485
-        strokeEndAnim.repeatCount = Float(Int.max)
         strokeEndAnim.keyPath = #keyPath(CAShapeLayer.strokeEnd)
         
         let groupAnim = CAAnimationGroup()
@@ -221,14 +224,13 @@ class LoadingViewController: UIViewController {
         baseView.layer.sublayers![0].add(groupAnim, forKey: "groupEndAnimation")
         
         
+        
         let strokeStartAnimTwo = CABasicAnimation()
         strokeStartAnimTwo.toValue = 0
-        strokeStartAnimTwo.repeatCount = Float(Int.max)
         strokeStartAnimTwo.keyPath = #keyPath(CAShapeLayer.strokeStart)
         
         let strokeEndAnimTwo = CABasicAnimation()
         strokeEndAnimTwo.toValue = 0
-        strokeStartAnimTwo.repeatCount = Float(Int.max)
         strokeEndAnimTwo.keyPath = #keyPath(CAShapeLayer.strokeEnd)
         
         let groupAnimTwo = CAAnimationGroup()
@@ -239,6 +241,7 @@ class LoadingViewController: UIViewController {
         baseView.layer.sublayers![1].add(groupAnimTwo, forKey: "groupEndAnimationTwo")
         completion()
     }
+    
     //removing the clear layers
     func removeTransparentLayers(completion: @escaping ()->()) {
         self.layerOne.removeFromSuperlayer()
@@ -247,25 +250,79 @@ class LoadingViewController: UIViewController {
     }
     
     
+    func createCheckMark() {
+        let checkmarkPath = UIBezierPath()
+        let checkStartingPoint = CGPoint(x: 0, y: 0)
+        let checkSecondPoint = CGPoint(x: 0, y: 20)
+        let checkThirdPoint = CGPoint(x: 50, y: 20)
+        checkmarkPath.move(to: checkStartingPoint)
+        checkmarkPath.addLine(to: checkSecondPoint)
+        checkmarkPath.addLine(to: checkThirdPoint)
+        
+        checkMark = CAShapeLayer()
+        checkMark.path = checkmarkPath.cgPath
+        checkMark.fillColor = colorView.backgroundColor?.cgColor
+        checkMark.strokeColor = UIColor.white.cgColor
+        checkMark.lineWidth = 10
+        checkMark.zPosition = 10
+        checkMark.position = CGPoint(x: colorView.bounds.midX - 25, y: colorView.bounds.midY + 10)
+        checkMark.transform = CATransform3DMakeRotation(CGFloat(-45 * (Double.pi / 180)), 0, 0, 1.0)
+        colorView.layer.addSublayer(checkMark)
+        
+    }
+    
+    
     
     @IBAction func stopAnimationsTapped(_ sender: Any) {
+        //animating the completion of the circle
+        
         self.endAnimations() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { // change 2 to desired number of seconds
-                // Your code with delay
-                //removing the clear layers
+            //at this point, the circle should already be connected
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                //thinning out the width of the circle and removing the transparent layers
+                
+                let strokeWidth = CABasicAnimation()
+                strokeWidth.keyPath = #keyPath(CAShapeLayer.lineWidth)
+                strokeWidth.toValue = 0
+                strokeWidth.duration = 0.7
+                self.baseView.layer.sublayers![2].add(strokeWidth, forKey: "shrinkWidth")
+                
+                
                 self.removeTransparentLayers {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.65, execute: {
+                        //removing the base view circle (the layers of the circle)
+                        //this includes all the animations from the inital animations
                         self.baseView.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
+            
                         UIView.animate(withDuration: 0.4, delay: 0, options: [], animations: {
+                            //shrinking the base view(which is transparent) so that the green circle underneath can be shown
                             self.baseView.frame = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
                             self.baseView.layer.cornerRadius = 0
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                                let checkRotation = CABasicAnimation()
+                                checkRotation.keyPath = #keyPath(CAShapeLayer.transform)
+                                checkRotation.toValue = CATransform3DMakeRotation(CGFloat(35 * (Double.pi / 180)), 0, 0, 1.0)
+                                checkRotation.duration = 0.15
+                                
+                                
+                                self.colorView.layer.add(checkRotation, forKey: "checkRotation")
+                            })
+                            
                         }, completion: { (bool) in
-                            return
-                        })
                         
-                        UIView.animate(withDuration: 0.5, delay: 0.7, options: [], animations: {
-                            self.colorView.alpha = 0
-                        }, completion: { (bool) in
+                            
+                           
+                            UIView.animate(withDuration: 0.5, delay: 0.8, options: [], animations: {
+                                
+                                self.colorView.alpha = 0
+                            }, completion: { (bool) in
+                                self.baseView.removeFromSuperview()
+                                self.colorView.removeFromSuperview()
+                                return
+                            })
+                            
                             return
                         })
                         
@@ -275,5 +332,8 @@ class LoadingViewController: UIViewController {
         
         }
     }
+    
+    
+    
     
 }

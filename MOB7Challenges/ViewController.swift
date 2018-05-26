@@ -429,7 +429,7 @@ class ViewController: UIViewController {
             view.layer.cornerRadius = frameTwo.height / 2
             view.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY)
         }) { (bool) in
-            return bool
+            return
         }
         
         //animate the y position and height of the view
@@ -439,14 +439,14 @@ class ViewController: UIViewController {
             view.frame = frameThree
             view.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY - 150)
         }) { (bool) in
-            return bool
+            return
         }
         
         //animate the width of the view (we can use insets)
         UIView.animate(withDuration: 1, delay: 2.5, usingSpringWithDamping: 0.4, initialSpringVelocity: 1, options: [], animations: {
             view.frame = view.frame.insetBy(dx: -100, dy: 0)
         }) { (bool) in
-            return bool
+            return
         }
         
         //animate the height of the view
@@ -454,7 +454,7 @@ class ViewController: UIViewController {
             view.frame = view.frame.insetBy(dx: 0, dy: -100)
             view.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.midY - 50)
         }) { (bool) in
-            return bool
+            return
         }
         
         //animate to the blue ball
@@ -466,7 +466,7 @@ class ViewController: UIViewController {
             view.layer.position = CGPoint(x: self.view.bounds.midX, y: self.view.bounds.maxY - 150)
             view.backgroundColor = UIColor.blue.withAlphaComponent(0.6)
         }) { (bool) in
-            return bool
+            return
         }
         
     }
